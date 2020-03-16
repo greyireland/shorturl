@@ -1,0 +1,48 @@
+# application config
+[app]
+    domain = "http://localhost:8001"
+    cache_size = 10000
+    expire = "10h"
+    redirect_port="8001"
+
+
+[grpc]
+    addr = "0.0.0.0:9000"
+    timeout = "100s"
+
+[http]
+    addr = "0.0.0.0:8000"
+    timeout = "100s"
+
+[redis]
+	name = "demo"
+	proto = "tcp"
+	addr = "127.0.0.1:6379"
+	idle = 10
+	active = 10
+	dialTimeout = "1s"
+	readTimeout = "1s"
+	writeTimeout = "1s"
+	idleTimeout = "10s"
+
+[db]
+	addr = "127.0.0.1:3306"
+	dsn = "root:091128@tcp(127.0.0.1:3306)/short_url?timeout=1s&readTimeout=1s&writeTimeout=1s&parseTime=true&loc=Local&charset=utf8mb4,utf8"
+	readDSN = ["root:091128@tcp(127.0.0.1:3306)/short_url?timeout=1s&readTimeout=1s&writeTimeout=1s&parseTime=true&loc=Local&charset=utf8mb4,utf8","root:091128@tcp(127.0.0.1:3306)/short_url?timeout=1s&readTimeout=1s&writeTimeout=1s&parseTime=true&loc=Local&charset=utf8,utf8mb4"]
+	active = 20
+	idle = 10
+	idleTimeout ="4h"
+	queryTimeout = "200s"
+	execTimeout = "300s"
+	tranTimeout = "400s"
+
+[memcache]
+	name = "demo"
+	proto = "tcp"
+	addr = "127.0.0.1:11211"
+	active = 50
+	idle = 10
+	dialTimeout = "100ms"
+	readTimeout = "200ms"
+	writeTimeout = "300ms"
+    idleTimeout = "80s"

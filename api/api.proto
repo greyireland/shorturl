@@ -1,0 +1,39 @@
+// 定义项目 API 的 proto 文件 可以同时描述 gRPC 和 HTTP API
+// protobuf 文件参考:
+//  - https://developers.google.com/protocol-buffers/
+syntax = "proto3";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+// package 命名使用 {appid}.{version} 的方式, version 形如 v1, v2 ..
+package platform.shorturl.v1;
+
+// NOTE: 最后请删除这些无用的注释 (゜-゜)つロ
+
+option go_package = "api";
+option (gogoproto.goproto_getters_all) = false;
+
+service ShortURL {
+    rpc Shorten (URLReq) returns (URLResp) {
+        option (google.api.http) = {
+          post: "/api/url/shorten"
+        };
+    };
+    rpc GetRawURL (GetRawURLReq) returns (GetRawURLResp);
+}
+
+message URLReq {
+    string raw_url = 1 [(gogoproto.moretags) = 'form:"raw_url" validate:"required,contains=http"'];
+}
+
+message URLResp {
+    string code = 1 [(gogoproto.jsontag) = 'code'];
+}
+message GetRawURLReq {
+    string code = 1 [(gogoproto.moretags) = 'form:"code" validate:"required"'];
+}
+message GetRawURLResp {
+    string raw_url = 1 [(gogoproto.jsontag) = 'raw_url'];
+}
