@@ -39,16 +39,22 @@ func (s *Service) Shorten(ctx context.Context, req *pb.URLReq) (reply *pb.URLRes
 	} else {
 		incr, err = s.dao.GetIncrID(ctx)
 		if err != nil {
+			incr = 0
+		}
+		code = DecimalToAny(genID(incr), 64)
+		u := &model.URL{Raw: req.RawUrl, Incr: incr, Code: code}
+		err = s.dao.AddURL(ctx, u)
+		if err != nil {
 			return
 		}
-		code = DecimalToAny(incr, 64)
-		u := &model.URL{Raw: req.RawUrl, Incr: incr, Code: code}
-		s.dao.AddURL(ctx, u)
 	}
 
 	content := fmt.Sprintf("%s/%s", conf.Cfg.App.Domain, code)
 	reply = &pb.URLResp{Code: content}
 	return
+}
+func genID(incr int64) int64 {
+	return incr + 1
 }
 func (s *Service) GetRawURL(ctx context.Context, req *pb.GetRawURLReq) (res *pb.GetRawURLResp, err error) {
 	var r *model.URL

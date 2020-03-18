@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/bilibili/kratos/pkg/log"
 	"github.com/greyireland/shorturl/api"
 	"github.com/greyireland/shorturl/internal/conf"
 )
@@ -22,17 +23,17 @@ func New(svc api.ShortURLBMServer) (server *http.Server, err error) {
 			return
 		}
 		res, err := svc.GetRawURL(context.TODO(), &api.GetRawURLReq{Code: code})
-		fmt.Println("raw url:", res)
 		if err != nil {
 			w.Write(indexHTML)
 			w.WriteHeader(http.StatusOK)
 			return
 		}
+		log.Info("Redirect url: %s", res.RawUrl)
 		w.Header().Set("Location", res.RawUrl)
 		w.WriteHeader(302)
 	})
 
-	fmt.Println("redirect serve port:", conf.Cfg.App.RedirectPort)
+	fmt.Println("Redirect serve at:", conf.Cfg.App.RedirectPort)
 	go func() {
 		http.ListenAndServe("0.0.0.0:"+conf.Cfg.App.RedirectPort, nil)
 	}()
